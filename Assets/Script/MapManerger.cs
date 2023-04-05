@@ -7,6 +7,10 @@ public class MapManerger : MonoBehaviour
     [SerializeField] Transform[] pathPoint;
     [SerializeField] GameObject[] floorObjectR;
     [SerializeField] GameObject[] floorObjectB;
+
+    [SerializeField] float instanTime;
+    float nextTime;
+    float currentTime = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +20,13 @@ public class MapManerger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Instantiate(floorObjectB[Random.Range(0, 5)], LineProgressRatio(Random.Range(0, 1f)), Quaternion.identity);        
+        currentTime +=Time.deltaTime;
+        if (currentTime > nextTime)
+        {
+            Instantiate(floorObjectB[Random.Range(0, 5)], LineProgressRatio(Random.Range(0, 1f)), Quaternion.identity);
+            Instantiate(floorObjectR[Random.Range(0, 5)], LineProgressRatio(Random.Range(0, 1f)), Quaternion.identity);
+            nextTime += instanTime;
+        }
     }
 
 

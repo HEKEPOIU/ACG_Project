@@ -7,6 +7,7 @@ public class Floor : MonoBehaviour,IAttractAble
 {
     [SerializeField] bool m_electrode;
     [SerializeField] float force = 20;
+    [SerializeField] Transform blackHole;
     public bool Electrode { get { return m_electrode; } set { m_electrode = value; } }
     Rigidbody2D m_Rigidbody2D;
 
@@ -16,6 +17,7 @@ public class Floor : MonoBehaviour,IAttractAble
     void Start()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        Attract(blackHole, 1000,false);
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -32,6 +34,10 @@ public class Floor : MonoBehaviour,IAttractAble
                 attractAbleObj.Attract(gameObject.transform, force, false);
             }
         }
+    }
+    void OnBecameInvisible()
+    {
+        Destroy(gameObject);
     }
 
     public void Attract(Transform target, float speed, bool inver)

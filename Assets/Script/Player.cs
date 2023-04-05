@@ -16,12 +16,15 @@ public class Player : MonoBehaviour,IAttractAble
     bool jump = false;
     [SerializeField] bool m_electrode;
     public bool Electrode { get{ return m_electrode; } set { m_electrode = value; } }
+    private Vector2 _screenBounds;
 
     // Start is called before the first frame update
     void Start()
     {
         m_Playerinput = GetComponent<PlayerInput>();
         m_Playercontrol = GetComponent<PlayerControl>();
+
+        _screenBounds = Camera.main.ScreenToWorldPoint(new Vector3 ( Screen.width, Screen.height, Camera.main.transform.position.z ));
     }
 
     // Update is called once per frame
@@ -36,6 +39,23 @@ public class Player : MonoBehaviour,IAttractAble
             jump = true;
         }
     }
+    void LateUpdate()
+    {
+        Vector3 viewPosition = transform.position;
+        viewPosition.x = Mathf.Clamp(viewPosition.x,_screenBounds.x * -1 ,_screenBounds.x);
+        transform.position = viewPosition;
+    }
+    void OnBecameInvisible() //相機再也看不到他，我用來倒捲的。
+    {
+        // 0,1,0在viewport空間是上緣，0,0,0是下緣。
+        Vector3 newPosition = transform.position;
+        if (newPosition.y<=0) newPosition.y = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y + transform.localScale.y;
+        else newPosition.y = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).y - transform.localScale.y;
+
+        // Set the new position of the object
+        transform.position = newPosition;
+    }
+
     void FixedUpdate()
     {
         m_Playercontrol.Move(axis);

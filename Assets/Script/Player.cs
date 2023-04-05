@@ -9,6 +9,7 @@ public class Player : MonoBehaviour,IAttractAble
     [SerializeField] private Sprite switchSprite;
     [SerializeField] private int life = 3;
 
+
     PlayerInput m_Playerinput;
     PlayerControl m_Playercontrol;
     float axis = 0;
@@ -37,8 +38,10 @@ public class Player : MonoBehaviour,IAttractAble
     }
     void FixedUpdate()
     {
-        m_Playercontrol.Move(axis,false);
+        m_Playercontrol.Move(axis);
+        m_Playercontrol.Jump(jump);
         jump = false;
+        
     }
 
     public void Attract(Transform target, float speed, bool inver)

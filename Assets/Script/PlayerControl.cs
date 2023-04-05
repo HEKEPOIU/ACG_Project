@@ -9,11 +9,15 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] float[] skillCD;
     [SerializeField] float abiltyRange;
+    [SerializeField] private Transform m_GroundCheck;
+    [SerializeField] private LayerMask m_WhatIsGround;
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;
 
     [HideInInspector] public Rigidbody2D m_Rigidbody2D;
     Vector3 m_Velocity = Vector3.zero;
+    const float k_GroundedRadius = .2f;
     bool m_FacingRight = true;
+    bool m_Grounded;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +26,23 @@ public class PlayerControl : MonoBehaviour
         
 
     }
-    public void Move(float axis,bool jump)
+    void Update()
+    {
+        m_Grounded = false;
+
+        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject != gameObject)
+            {
+                m_Grounded = true;
+
+            }
+        }
+    }
+    public void Move(float axis)
     {
         
         Vector3 targetVelocity = new Vector2(axis * moveSpeed * 10f * Time.fixedDeltaTime,m_Rigidbody2D.velocity.y);
@@ -41,7 +61,10 @@ public class PlayerControl : MonoBehaviour
             // ... flip the player.
             Flip();
         }
-        if (jump)
+    }
+    public void Jump(bool jump)
+    {
+        if (jump && m_Grounded)
         {
             // Add a vertical force to the player.
             m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));

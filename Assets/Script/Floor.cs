@@ -18,12 +18,6 @@ public class Floor : MonoBehaviour,IAttractAble
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void OnTriggerStay2D(Collider2D collision)
     {
         IAttractAble attractAbleObj = collision.GetComponent<IAttractAble>();

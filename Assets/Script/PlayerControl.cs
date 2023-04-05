@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
+    [SerializeField] float jumpForce;
     [SerializeField] float[] skillCD;
     [SerializeField] float abiltyRange;
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;
@@ -13,6 +14,7 @@ public class PlayerControl : MonoBehaviour
     [HideInInspector] public Rigidbody2D m_Rigidbody2D;
     Vector3 m_Velocity = Vector3.zero;
     bool m_FacingRight = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,11 +22,10 @@ public class PlayerControl : MonoBehaviour
         
 
     }
-    public void Move(float axis)
+    public void Move(float axis,bool jump)
     {
         
-        Vector3 targetVelocity = new Vector3(transform.forward.z * axis * moveSpeed * 10f*Time.fixedDeltaTime, transform.forward.z * m_Rigidbody2D.velocity.y,0);
-        print(targetVelocity);
+        Vector3 targetVelocity = new Vector2(axis * moveSpeed * 10f * Time.fixedDeltaTime,m_Rigidbody2D.velocity.y);
         // And then smoothing it out and applying it to the character
         m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
@@ -39,6 +40,11 @@ public class PlayerControl : MonoBehaviour
         {
             // ... flip the player.
             Flip();
+        }
+        if (jump)
+        {
+            // Add a vertical force to the player.
+            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));
         }
     }
     private void Flip()

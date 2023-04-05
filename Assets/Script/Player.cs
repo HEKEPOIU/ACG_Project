@@ -12,6 +12,7 @@ public class Player : MonoBehaviour,IAttractAble
     PlayerInput m_Playerinput;
     PlayerControl m_Playercontrol;
     float axis = 0;
+    bool jump = false;
     [SerializeField] bool m_electrode;
     public bool Electrode { get{ return m_electrode; } set { m_electrode = value; } }
 
@@ -25,15 +26,19 @@ public class Player : MonoBehaviour,IAttractAble
     // Update is called once per frame
     void Update()
     {
-        if (m_Playerinput.actions["Move"].ReadValue<float>() > 0)
-            axis = 1;
-        else if (m_Playerinput.actions["Move"].ReadValue<float>() < 0)
-            axis = -1;
+        if (m_Playerinput.actions["Move"].ReadValue<float>() > 0) axis = 1;
+        else if (m_Playerinput.actions["Move"].ReadValue<float>() < 0) axis = -1;
         else axis = 0;
+
+        if (m_Playerinput.actions["Jump"].WasPressedThisFrame())
+        {
+            jump = true;
+        }
     }
     void FixedUpdate()
     {
-        m_Playercontrol.Move(axis);
+        m_Playercontrol.Move(axis,false);
+        jump = false;
     }
 
     public void Attract(Transform target, float speed, bool inver)
@@ -45,7 +50,7 @@ public class Player : MonoBehaviour,IAttractAble
         }
         else
         {
-            Vector3 distance = target.position + transform.position;
+            Vector3 distance = target.position - transform.position;
             m_Playercontrol.m_Rigidbody2D.AddRelativeForce(distance.normalized * speed, ForceMode2D.Force);
         }
         

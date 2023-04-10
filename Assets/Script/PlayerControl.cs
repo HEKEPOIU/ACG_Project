@@ -80,14 +80,16 @@ public class PlayerControl : MonoBehaviour
         theScale.x *= -1;
         transform.localScale = theScale;
     }
-    public void Ablity(IAttractAble obj,bool isSame)
+    public void Ablity(GameObject obj,bool selfElectrode)
     {
+        if (obj == null) return;
+        IAttractAble target = obj.GetComponent<IAttractAble>();
+        bool isSame;
+        if (target != null) isSame = (target.Electrode == selfElectrode);
+        else return;
 
-        if (isSame)
-            obj.Attract(transform, skillForce, true, ForceMode2D.Impulse);
-        else
-            obj.Attract(transform, skillForce, false,ForceMode2D.Impulse);
-        obj = null;
+        target.Attract(transform, skillForce, isSame, ForceMode2D.Impulse);
+
 
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.XR;
 public class PlayerManerger : MonoBehaviour
 {
     [SerializeField] PlayerInputManager m_PlayerInputManager;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -19,5 +19,10 @@ public class PlayerManerger : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void initPlayer()
+    {
+
     }
 }

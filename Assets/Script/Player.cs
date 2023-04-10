@@ -5,11 +5,15 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour,IAttractAble
 {
+
     [HideInInspector] public bool inverElect;
     [SerializeField] private Sprite switchSprite;
     [SerializeField] private int life = 3;
     [SerializeField] float skillRange = 1.0f;
-    [SerializeField] GameObject child;
+
+
+    [SerializeField] GameObject rotateChild;
+
     [Header("¿ï¾ÜAttractable¹Ï¼h")]
     [SerializeField] LayerMask layerMask;
 
@@ -56,34 +60,23 @@ public class Player : MonoBehaviour,IAttractAble
         else if (m_Playerinput.actions["Move"].ReadValue<float>() < 0) axis = -1;
         else axis = 0;
 
-        m_Playerinput.actions["look"].performed += x => { _FaceDir = x.ReadValue<Vector2>(); };
-        if (m_Playerinput.currentControlScheme == "Keyboard&Mouse")
-            _FaceDir = (Camera.main.ScreenToWorldPoint(_FaceDir)-gameObject.transform.position).normalized;
-        child.transform.up = _FaceDir;
-
-
-        m_Playerinput.actions["Select"].performed += x => {print("click"); obj = isClickedOn();};
-        
-        m_Playerinput.actions["Select"].canceled += x => 
+        m_Playerinput.actions["look"].performed += x =>
         {
-            if (obj==null)
-            {
-                return;
-            }
-            IAttractAble target = obj.GetComponent<IAttractAble>();
-            bool isSame = false;
-            if (target != null)
-            {
-                isSame = (target.Electrode == this.Electrode);
-            }
-            m_Playercontrol.Ablity(target, isSame); 
+            _FaceDir = x.ReadValue<Vector2>();
+            if (m_Playerinput.currentControlScheme == "Keyboard&Mouse")
+                _FaceDir = (Camera.main.ScreenToWorldPoint(_FaceDir) - gameObject.transform.position).normalized;
+            _FaceDir.z = 0;
         };
+
+        rotateChild.transform.up = _FaceDir;
+
+        m_Playerinput.actions["Select"].performed += x => {obj = isClickedOn();};
+        
+        m_Playerinput.actions["Select"].canceled += x => {m_Playercontrol.Ablity(obj, Electrode); };
 
 
         if (m_Playerinput.actions["Jump"].WasPressedThisFrame())
-        {
             jump = true;
-        }
     }
     void LateUpdate()
     {

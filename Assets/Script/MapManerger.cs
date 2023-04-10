@@ -23,9 +23,16 @@ public class MapManerger : MonoBehaviour
         currentTime +=Time.deltaTime;
         if (currentTime > nextTime)
         {
-            Instantiate(floorObjectB[Random.Range(0, 5)], LineProgressRatio(Random.Range(0, 1f)), Quaternion.identity);
-            Instantiate(floorObjectR[Random.Range(0, 5)], LineProgressRatio(Random.Range(0, 1f)), Quaternion.identity);
-            nextTime += instanTime;
+            if (Random.Range(0,2)==0)
+            {
+                Instantiate(floorObjectB[Random.Range(0, 6)], LineProgressRatio(Random.Range(0, 1f)), Quaternion.identity);
+                nextTime += instanTime;
+            }
+            else
+            {
+                Instantiate(floorObjectR[Random.Range(0, 6)], LineProgressRatio(Random.Range(0, 1f)), Quaternion.identity);
+                nextTime += instanTime;
+            }
         }
     }
 

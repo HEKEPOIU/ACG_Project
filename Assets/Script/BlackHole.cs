@@ -23,7 +23,7 @@ public class BlackHole : MonoBehaviour
     {
         Vector3 distance = collision.transform.position - transform.position;
         collision.GetComponent<Rigidbody2D>().AddRelativeForce(distance.normalized * blackHoleForce, ForceMode2D.Force);
-        if (distance.magnitude < 5)
+        if (distance.magnitude < 3 && collision.CompareTag("Player"))
         {
             Destroy(collision.gameObject);
         }

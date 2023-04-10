@@ -8,7 +8,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float jumpForce;
     [SerializeField] float[] skillCD;
-    [SerializeField] float abiltyRange;
+    [SerializeField] float skillForce = 10;
     [SerializeField] private Transform m_GroundCheck;
     [SerializeField] private LayerMask m_WhatIsGround;
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;
@@ -20,12 +20,13 @@ public class PlayerControl : MonoBehaviour
     bool m_Grounded;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         
 
     }
+
     void Update()
     {
         m_Grounded = false;
@@ -78,5 +79,15 @@ public class PlayerControl : MonoBehaviour
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+    }
+    public void Ablity(IAttractAble obj,bool isSame)
+    {
+
+        if (isSame)
+            obj.Attract(transform, skillForce, true, ForceMode2D.Impulse);
+        else
+            obj.Attract(transform, skillForce, false,ForceMode2D.Impulse);
+        obj = null;
+
     }
 }

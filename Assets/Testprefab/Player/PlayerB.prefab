@@ -131,7 +131,7 @@ MonoBehaviour:
   rotateChild: {fileID: 8973827835092872118}
   layerMask:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 55
   m_electrode: 0
 --- !u!114 &8973827834372333431
 MonoBehaviour:

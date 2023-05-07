@@ -326,6 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallTime: 1
   rotatePoint: {x: -1, y: 0, z: 0}
+  rb: {fileID: 0}
 --- !u!61 &7812569327188960231
 BoxCollider2D:
   m_ObjectHideFlags: 0

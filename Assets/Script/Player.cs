@@ -78,23 +78,14 @@ public class Player : MonoBehaviour,IAttractAble
         if (m_Playerinput.actions["Jump"].WasPressedThisFrame())
             jump = true;
     }
-    void LateUpdate()
-    {
-        Vector3 viewPosition = transform.position;
-        viewPosition.x = Mathf.Clamp(viewPosition.x,_screenBounds.x * -1 ,_screenBounds.x);
-        viewPosition.y = Mathf.Clamp(viewPosition.y,_screenBounds.y * -1 ,_screenBounds.y);
-        transform.position = viewPosition;
-    }
-    //void OnBecameInvisible() //相機再也看不到他，我用來倒捲的。
+    //void LateUpdate()
     //{
-    //    // 0,1,0在viewport空間是上緣，0,0,0是下緣。
-    //    Vector3 newPosition = transform.position;
-    //    if (newPosition.y<=0) newPosition.y = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y + transform.localScale.y;
-    //    else newPosition.y = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).y - transform.localScale.y;
-
-    //    // Set the new position of the object
-    //    transform.position = newPosition;
+    //    Vector3 viewPosition = transform.position;
+    //    viewPosition.x = Mathf.Clamp(viewPosition.x,_screenBounds.x * -1 ,_screenBounds.x);
+    //    viewPosition.y = Mathf.Clamp(viewPosition.y,_screenBounds.y * -1 ,_screenBounds.y);
+    //    transform.position = viewPosition;
     //}
+
 
     void FixedUpdate()
     {

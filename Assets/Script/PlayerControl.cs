@@ -9,9 +9,15 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] float[] skillCD;
     [SerializeField] float skillForce = 10;
+    public float powerMul = 1;
     [SerializeField] private Transform m_GroundCheck;
     [SerializeField] private LayerMask m_WhatIsGround;
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;
+
+    Animator m_Animator;
+    AudioSource m_AudioSource;
+    [SerializeField] AudioClip jumpAudio;
+    [SerializeField] AudioClip ablityAudio;
 
     [HideInInspector] public Rigidbody2D m_Rigidbody2D;
     Vector3 m_Velocity = Vector3.zero;
@@ -23,14 +29,13 @@ public class PlayerControl : MonoBehaviour
     void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-        
-
+        m_Animator = GetComponent<Animator>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
         m_Grounded = false;
-
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
@@ -39,15 +44,19 @@ public class PlayerControl : MonoBehaviour
             if (colliders[i].gameObject != gameObject)
             {
                 m_Grounded = true;
-
             }
         }
+        m_Animator.SetBool("onAir", !m_Grounded);
     }
     public void Move(float axis)
     {
-        
         Vector3 targetVelocity = new Vector2(axis * moveSpeed * 10f * Time.fixedDeltaTime,m_Rigidbody2D.velocity.y);
         // And then smoothing it out and applying it to the character
+        if (m_Rigidbody2D.velocity.x > 0 && !m_AudioSource.isPlaying && m_Grounded)
+            m_AudioSource.Play();
+        else if (m_AudioSource.isPlaying && (!m_Grounded|| m_Rigidbody2D.velocity.x == 0))
+            m_AudioSource.Stop();
+        m_Animator.SetFloat("moveSpeed", targetVelocity.magnitude);
         m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
         // If the input is moving the player right and the player is facing left...
@@ -67,6 +76,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (jump && m_Grounded)
         {
+            TetrisAction.audioPlayer.PlayOneShot(jumpAudio);
             // Add a vertical force to the player.
             m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));
         }
@@ -88,8 +98,13 @@ public class PlayerControl : MonoBehaviour
         if (target != null) isSame = (target.Electrode == selfElectrode);
         else return;
 
-        target.Attract(transform, skillForce, isSame, ForceMode2D.Impulse);
+        m_Animator.SetBool("onCharge", true);
+        TetrisAction.audioPlayer.PlayOneShot(ablityAudio);
+        target.Attract(transform, skillForce * MathF.Min(powerMul,3), isSame, ForceMode2D.Impulse);
 
-
+    }
+    public void OnAblityAnimationEnd()
+    {
+        m_Animator.SetBool("onCharge", false);
     }
 }

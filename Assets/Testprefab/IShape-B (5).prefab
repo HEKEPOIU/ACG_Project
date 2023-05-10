@@ -72,8 +72,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 066a2cb1bec3bec4797410027c0327da, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: -586450738, guid: e8410d608f5eb884e9e050210031171a, type: 3}
   m_Color: {r: 0, g: 0.41568628, b: 0.99607843, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -157,7 +157,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 066a2cb1bec3bec4797410027c0327da, type: 3}
+  m_Sprite: {fileID: 798810201, guid: e8410d608f5eb884e9e050210031171a, type: 3}
   m_Color: {r: 0, g: 0.41568628, b: 0.99607843, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -243,6 +243,8 @@ MonoBehaviour:
   rotatePoint: {x: 0.5, y: -0.5, z: 0}
   rb: {fileID: 0}
   electrode: 0
+  clearLine: {fileID: 8300000, guid: 9defb54da256d3149978faac868738ac, type: 3}
+  hit: {fileID: 8300000, guid: 332f65f06a9715148a17d63e3d45afba, type: 3}
 --- !u!61 &5788211925312201839
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -341,8 +343,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 066a2cb1bec3bec4797410027c0327da, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: -1108035175, guid: e8410d608f5eb884e9e050210031171a, type: 3}
   m_Color: {r: 0, g: 0.41568628, b: 0.99607843, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -426,7 +428,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 066a2cb1bec3bec4797410027c0327da, type: 3}
+  m_Sprite: {fileID: -1108035175, guid: e8410d608f5eb884e9e050210031171a, type: 3}
   m_Color: {r: 0, g: 0.41568628, b: 0.99607843, a: 1}
   m_FlipX: 0
   m_FlipY: 0

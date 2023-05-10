@@ -38,8 +38,8 @@
                     "id": "e504f45b-c0fb-4ff0-8da0-ba01e86e43a4",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
-                    "initialStateCheck": false
+                    "interactions": "Press(behavior=2),Hold",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

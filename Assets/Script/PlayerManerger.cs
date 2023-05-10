@@ -6,7 +6,7 @@ using UnityEngine.XR;
 
 public class PlayerManerger : MonoBehaviour
 {
-    [SerializeField] PlayerInputManager m_PlayerInputManager;
+    PlayerInputManager m_PlayerInputManager;
     
     // Start is called before the first frame update
     void Start()

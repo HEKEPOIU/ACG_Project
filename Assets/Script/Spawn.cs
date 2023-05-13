@@ -13,6 +13,7 @@ public class Spawn : MonoBehaviour
     void Start()
     {
         NewTetromino();
+        dir *= Random.Range(0,2) == 0 ? 1:-1;
     }
 
     // Update is called once per frame

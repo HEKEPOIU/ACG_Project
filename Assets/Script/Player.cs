@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Scripting;
 
 public class Player : MonoBehaviour,IAttractAble
 {
@@ -27,6 +28,9 @@ public class Player : MonoBehaviour,IAttractAble
     public bool Electrode { get{ return m_electrode; } set { m_electrode = value; } }
     Vector3 _FaceDir;
 
+    public GameManeger gm;
+
+
     [SerializeField] Color chargeColor;
     Color originColor;
 
@@ -50,6 +54,9 @@ public class Player : MonoBehaviour,IAttractAble
     // Start is called before the first frame update
     void Start()
     {
+
+        if (Electrode) gameObject.transform.position = new Vector3(2, 8, 0);
+        else gameObject.transform.position = new Vector3(17, 8, 0);
         m_Playerinput = GetComponent<PlayerInput>();
         m_Playercontrol = GetComponent<PlayerControl>();
         m_Playerinput.actions["Select"].performed += x =>
@@ -63,6 +70,12 @@ public class Player : MonoBehaviour,IAttractAble
             m_Playercontrol.Ablity(obj, Electrode,this);
             m_Playercontrol.powerMul = 0.3f;
         };
+
+        m_Playerinput.actions["UI"].performed += e =>
+        {
+            gm.OpenUI();
+        };
+
         originColor = arrow.color;
         _light = GetComponentInChildren<Light2D>();
 

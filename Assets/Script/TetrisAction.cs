@@ -1,8 +1,6 @@
 
-using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
-using static Unity.VisualScripting.Metadata;
-using static UnityEngine.GraphicsBuffer;
 
 public class TetrisAction : MonoBehaviour, IAttractAble
 {
@@ -27,9 +25,15 @@ public class TetrisAction : MonoBehaviour, IAttractAble
     [SerializeField] AudioClip clearLine;
     [SerializeField] AudioClip hit;
 
+    static public GameObject tetrisOnStage;
+
     public bool Electrode { get { return electrode; } set { electrode = value; } }
 
     float maxPosY;
+
+    public Player firstTouch;
+
+    public static List<GameObject> tOnGround = new List<GameObject>();
 
 
     // Start is called before the first frame update
@@ -41,7 +45,7 @@ public class TetrisAction : MonoBehaviour, IAttractAble
             spawn = FindAnyObjectByType<Spawn>();
             audioPlayer = spawn.GetComponent<AudioSource>();
         }
-
+        tetrisOnStage = gameObject;
     }
     void Update()
     {
@@ -58,15 +62,15 @@ public class TetrisAction : MonoBehaviour, IAttractAble
     {
         if (!isAiControl)
         {
-            if (rb.velocity.x <=0.5f)
-            {
-                rb.velocity = Vector2.zero;
-                int roundedX = Mathf.RoundToInt(transform.position.x);
-                int roundedY = Mathf.RoundToInt(transform.position.y);
-                rb.MovePosition(new Vector2(roundedX, roundedY));
-                rb.gravityScale = 17;
+            //if (rb.velocity.x <=0.5f)
+            //{
+            //    rb.velocity = Vector2.zero;
+            //    int roundedX = Mathf.RoundToInt(transform.position.x);
+            //    int roundedY = Mathf.RoundToInt(transform.position.y);
+            //    rb.MovePosition(new Vector2(roundedX, roundedY));
+            //    rb.gravityScale = 17;
 
-            }
+            //}
 
             if (!ValidMove(rb.velocity.normalized))
             {
@@ -85,13 +89,20 @@ public class TetrisAction : MonoBehaviour, IAttractAble
                     int roundedY = Mathf.RoundToInt(transform.position.y);
                     rb.MovePosition(new Vector2(roundedX, roundedY));
 
-                    AddToGrid();
-                    CheckForLines();
-                    gameObject.layer = 11;
-                    audioPlayer.PlayOneShot(hit);
-                    Destroy(this);
+                    nextTetris();
 
                 }
+            }
+
+           else if (rb.velocity.magnitude == 0 || !ValidMove(Vector2.down))
+            {
+                rb.velocity = Vector2.zero;
+                rb.gravityScale = 0;
+                int roundedX = Mathf.RoundToInt(transform.position.x);
+                int roundedY = Mathf.RoundToInt(transform.position.y);
+                rb.MovePosition(new Vector2(roundedX, roundedY));
+
+                nextTetris();
             }
         }
     }
@@ -120,15 +131,6 @@ public class TetrisAction : MonoBehaviour, IAttractAble
         }
         return reachedMax;
     }
-
-    void Move(Vector2 dir)
-    {
-        if (ValidMove(dir) && isAiControl)
-        {
-            rb.MovePosition((Vector2)transform.position + dir);
-        }
-    }
-
     void CheckForLines()
     {
         for (int i = height-1; i >= 0; i--)
@@ -191,15 +193,22 @@ public class TetrisAction : MonoBehaviour, IAttractAble
             }
             else
             {
-                AddToGrid();
-                CheckForLines();
-                rb.bodyType = RigidbodyType2D.Static;
-                audioPlayer.PlayOneShot(hit);
-                Destroy(this);
+                nextTetris();
             }
 
             nextFallTime += fallTime;
         }
+    }
+
+
+    void nextTetris()
+    {
+        AddToGrid();
+        CheckForLines();
+        gameObject.layer = 11;
+        audioPlayer.PlayOneShot(hit);
+        tOnGround.Add(gameObject);
+        Destroy(this);
     }
 
 

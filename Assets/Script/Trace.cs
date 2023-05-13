@@ -1,14 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Trace : MonoBehaviour
 {
     public float changeTargetInterval = 10f;  // 定義更換目標的時間間隔
 
-    private Rigidbody2D rb;
-    private GameObject currentTarget;
-    private float changeTargetTimer = 0f;
+    Rigidbody2D rb;
+    [HideInInspector] public GameObject currentTarget;
+    float changeTargetTimer = 0f;
+    [SerializeField] GameObject FX;
+    [SerializeField] AudioClip blockDeath;
+
     GameObject[] targets;
 
     void Start()
@@ -27,14 +28,28 @@ public class Trace : MonoBehaviour
         if (changeTargetTimer >= changeTargetInterval)
         {
             ChangeTarget();
-            changeTargetTimer = 0;
+        }
+
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == 11)
+        {
+            TetrisAction.tOnGround.Remove(collision.gameObject);
+            TetrisAction.audioPlayer.PlayOneShot(blockDeath);
+            GameObject FXbj = Instantiate(FX, collision.gameObject.transform.position, Quaternion.identity);
+            Destroy(FXbj, .5f);
+            Destroy(collision.gameObject);
+            
         }
     }
 
-    void ChangeTarget()
+    public void ChangeTarget()
     {
 
         if (currentTarget == targets[0]) currentTarget = targets[ 1%targets.Length];
         else currentTarget = targets[0];
+        changeTargetTimer = 0;
     }
 }

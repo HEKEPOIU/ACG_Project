@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public class Player : MonoBehaviour,IAttractAble
 {
@@ -14,10 +13,11 @@ public class Player : MonoBehaviour,IAttractAble
 
     [SerializeField] GameObject rotateChild;
     [SerializeField] SpriteRenderer arrow;
+    Light2D _light;
 
     [Header("¿ï¾ÜAttractable¹Ï¼h")]
     [SerializeField] LayerMask layerMask;
-    float chargeTime =.2f;
+    float chargeTime = 0f;
 
     PlayerInput m_Playerinput;
     PlayerControl m_Playercontrol;
@@ -27,6 +27,8 @@ public class Player : MonoBehaviour,IAttractAble
     public bool Electrode { get{ return m_electrode; } set { m_electrode = value; } }
     Vector3 _FaceDir;
 
+    [SerializeField] Color chargeColor;
+    Color originColor;
 
 
 
@@ -58,21 +60,19 @@ public class Player : MonoBehaviour,IAttractAble
         m_Playerinput.actions["Select"].canceled += x =>
         {
             m_Playercontrol.powerMul += (float)x.duration;
-            m_Playercontrol.Ablity(obj, Electrode);
-            m_Playercontrol.powerMul = 1;
+            m_Playercontrol.Ablity(obj, Electrode,this);
+            m_Playercontrol.powerMul = 0.3f;
         };
-        m_Playerinput.actions["look"].performed += x =>
-        {
-            _FaceDir = x.ReadValue<Vector2>();
-            if (m_Playerinput.currentControlScheme == "Keyboard&Mouse")
-                _FaceDir = (Camera.main.ScreenToWorldPoint(_FaceDir) - gameObject.transform.position).normalized;
-            _FaceDir.z = 0;
-        };
+        originColor = arrow.color;
+        _light = GetComponentInChildren<Light2D>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(TetrisAction.tetrisOnStage != null)
+            _FaceDir = (TetrisAction.tetrisOnStage.transform.position - gameObject.transform.position).normalized;
         if (m_Playerinput.actions["Move"].ReadValue<float>() > 0) axis = 1;
         else if (m_Playerinput.actions["Move"].ReadValue<float>() < 0) axis = -1;
         else axis = 0;
@@ -80,12 +80,16 @@ public class Player : MonoBehaviour,IAttractAble
         if(m_Playerinput.actions["Select"].inProgress)
         {
             chargeTime += Time.deltaTime / 3;
-            arrow.color = new Color(1,1,1, chargeTime);
+            Color lerpColor = Color.Lerp(originColor,chargeColor, chargeTime);
+            _light.intensity = chargeTime*7;
+            _light.color = lerpColor;
+            arrow.color = lerpColor;
         }
         else
         {
-            arrow.color = new Color(1, 1, 1, .2f);
-            chargeTime = .2f;
+            arrow.color = originColor;
+            _light.intensity = 0;
+            chargeTime = 0f;
         }
         rotateChild.transform.up = _FaceDir;
 

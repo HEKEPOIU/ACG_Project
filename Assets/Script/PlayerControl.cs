@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
@@ -21,7 +19,7 @@ public class PlayerControl : MonoBehaviour
 
     [HideInInspector] public Rigidbody2D m_Rigidbody2D;
     Vector3 m_Velocity = Vector3.zero;
-    const float k_GroundedRadius = .2f;
+    const float k_GroundedRadius = .5f;
     bool m_FacingRight = true;
     bool m_Grounded;
 
@@ -90,7 +88,7 @@ public class PlayerControl : MonoBehaviour
         theScale.x *= -1;
         transform.localScale = theScale;
     }
-    public void Ablity(GameObject obj,bool selfElectrode)
+    public void Ablity(GameObject obj,bool selfElectrode,Player who)
     {
         if (obj == null) return;
         IAttractAble target = obj.GetComponent<IAttractAble>();
@@ -100,6 +98,8 @@ public class PlayerControl : MonoBehaviour
 
         m_Animator.SetBool("onCharge", true);
         TetrisAction.audioPlayer.PlayOneShot(ablityAudio);
+        TetrisAction tetrisAction = obj.GetComponent<TetrisAction>();
+        tetrisAction.firstTouch = tetrisAction.firstTouch==null ? who : tetrisAction.firstTouch;
         target.Attract(transform, skillForce * MathF.Min(powerMul,3), isSame, ForceMode2D.Impulse);
 
     }

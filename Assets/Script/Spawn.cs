@@ -1,15 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawn : MonoBehaviour
 {
     [SerializeField] GameObject[] tetrominoes;
     TetrisAction m_Teris;
-    
+    bool isSpawn = false;
+    int dir = -2;
+    bool whichColor;
+    Player first;
+
     // Start is called before the first frame update
     void Start()
     {
+        NewTetromino();
     }
 
     // Update is called once per frame
@@ -19,11 +22,33 @@ public class Spawn : MonoBehaviour
         {
             NewTetromino();
         }
+        if (isSpawn)
+        {
+            if (transform.position.x >= 16 || transform.position.x <= 3) dir *= -1;
+            transform.position = transform.position + new Vector3(dir, 0, 0);
+            isSpawn = false;
+        }
+        if (m_Teris != null)
+        {
+            first = m_Teris.firstTouch;
+        }
+
+
     }
 
     public void NewTetromino()
     {
-        GameObject T =Instantiate(tetrominoes[Random.Range(0, tetrominoes.Length)], transform.position, Quaternion.identity);
+        GameObject T;
+        if (first != null)
+        {
+            T = first.Electrode ? Instantiate(tetrominoes[Random.Range(0, 7)], transform.position, Quaternion.identity) : Instantiate(tetrominoes[Random.Range(7, 14)], transform.position, Quaternion.identity);
+        }
+        else
+        {
+            T =whichColor ? Instantiate(tetrominoes[Random.Range(0, 7)], transform.position, Quaternion.identity) : Instantiate(tetrominoes[Random.Range(7, 14)], transform.position, Quaternion.identity);
+        }
         m_Teris = T.GetComponent<TetrisAction>();
+        whichColor = !whichColor;
+        isSpawn =true;
     }
 }

@@ -180,7 +180,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.5319433, y: 2.1314642, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4937651527672591359}
   - {fileID: 3903790817806339841}
@@ -275,7 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inverElect: 0
   switchSprite: {fileID: 0}
-  life: 100000
+  deathCount: 0
   skillRange: 10
   rotateChild: {fileID: 3093583353441398747}
   arrow: {fileID: 153540565807281257}
@@ -283,7 +283,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2359
   m_electrode: 0
-  chargeColor: {r: 0, g: 0.2627451, b: 0.54509807, a: 0.74509805}
+  gm: {fileID: 0}
+  chargeColor: {r: 0, g: 0.2627451, b: 0.54509807, a: 1}
+  originColor: {r: 0.42734656, g: 0.52602875, b: 0.6320754, a: 1}
+  arrowColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &3903790817523215070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,7 +301,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 50
   jumpForce: 50
-  skillCD: []
+  skillCD:
+  - 0.5
   skillForce: 80000
   powerMul: 1
   m_GroundCheck: {fileID: 3903790817806339841}
@@ -407,6 +411,7 @@ MonoBehaviour:
   blockDeath: {fileID: 8300000, guid: 709c2df4baaa7aa4d834264f12b6a867, type: 3}
   spawnArea: {x: 19, y: 8, z: 0}
   deathFX: {fileID: 1967835574231978638, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+  gm: {fileID: 0}
   invincibilityTime: 1.5
 --- !u!95 &816362022829031192
 Animator:

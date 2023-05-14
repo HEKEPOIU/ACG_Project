@@ -7,6 +7,7 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField]AudioClip blockDeath;
     [SerializeField] Vector3 spawnArea;
     [SerializeField] GameObject deathFX;
+    [SerializeField] GameManeger gm;
     Player player;
     Vector3 spawnPoint;
     Trace blackHole;
@@ -48,6 +49,7 @@ public class PlayerDeath : MonoBehaviour
         if (player.Electrode == true) spawnPoint = new Vector3(2, 8, 0);
         else spawnPoint = new Vector3(17, 8, 0);
         blackHole = FindObjectOfType<Trace>();
+        gm = FindAnyObjectByType<GameManeger>();
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -86,24 +88,27 @@ public class PlayerDeath : MonoBehaviour
         {
             blackHole.ChangeTarget();
         }
-        if (player.life != 0)
-        { 
-            player.life -= 1;
-            transform.position = spawnPoint;
-            for (int i = 0;i<TetrisAction.tOnGround.Count;i++)
+
+        player.deathCount += 1;
+        if (player.Electrode == true) gm.rDeathCount.text = player.deathCount.ToString();
+        else gm.bDeathCount.text = player.deathCount.ToString();
+
+        transform.position = spawnPoint;
+        for (int i = 0;i<TetrisAction.tOnGround.Count;i++)
+        {
+            if (TetrisAction.tOnGround[i] != null)
             {
-                GameObject FXbj = Instantiate(deathFX, TetrisAction.tOnGround[i].transform.position, Quaternion.identity);
-                Destroy(FXbj, .5f);
-                Destroy(TetrisAction.tOnGround[i]);
+                    GameObject FXbj = Instantiate(deathFX, TetrisAction.tOnGround[i].transform.position, Quaternion.identity);
+                    Destroy(FXbj, .5f);
+
             }
-            TetrisAction.audioPlayer.PlayOneShot(blockDeath);
-            TetrisAction.tOnGround.Clear();
-            GetComponent<Animator>().SetBool("onDeath", false);
-            player.enabled = true;
-            DamageAble = false;
-            
+            Destroy(TetrisAction.tOnGround[i]);
         }
-        else
-            Destroy(gameObject);
+        TetrisAction.audioPlayer.PlayOneShot(blockDeath);
+        TetrisAction.tOnGround.Clear();
+        GetComponent<Animator>().SetBool("onDeath", false);
+        player.enabled = true;
+        DamageAble = false;
+            
     }
 }

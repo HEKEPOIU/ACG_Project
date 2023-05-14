@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -8,7 +9,7 @@ public class Player : MonoBehaviour,IAttractAble
 
     [HideInInspector] public bool inverElect;
     [SerializeField] private Sprite switchSprite;
-    [SerializeField] public int life = 3;
+    public int deathCount = 0;
     [SerializeField] float skillRange = 1.0f;
 
 
@@ -32,7 +33,8 @@ public class Player : MonoBehaviour,IAttractAble
 
 
     [SerializeField] Color chargeColor;
-    Color originColor;
+    [SerializeField] Color originColor;
+    [SerializeField] Color arrowColor;
 
 
 
@@ -76,16 +78,23 @@ public class Player : MonoBehaviour,IAttractAble
             gm.OpenUI();
         };
 
-        originColor = arrow.color;
         _light = GetComponentInChildren<Light2D>();
-
+        arrowColor = arrow.color;
     }
 
     // Update is called once per frame
     void Update()
     {
         if(TetrisAction.tetrisOnStage != null)
-            _FaceDir = (TetrisAction.tetrisOnStage.transform.position - gameObject.transform.position).normalized;
+        {
+            Vector3 vec = TetrisAction.tetrisOnStage.transform.position - gameObject.transform.position;
+            if (vec.magnitude <= skillRange)
+            {
+                _FaceDir = (vec).normalized;
+                
+            }
+
+        }
         if (m_Playerinput.actions["Move"].ReadValue<float>() > 0) axis = 1;
         else if (m_Playerinput.actions["Move"].ReadValue<float>() < 0) axis = -1;
         else axis = 0;
@@ -94,13 +103,13 @@ public class Player : MonoBehaviour,IAttractAble
         {
             chargeTime += Time.deltaTime / 3;
             Color lerpColor = Color.Lerp(originColor,chargeColor, chargeTime);
-            _light.intensity = chargeTime*7;
+            _light.intensity = 3 + chargeTime*4;
             _light.color = lerpColor;
             arrow.color = lerpColor;
         }
         else
         {
-            arrow.color = originColor;
+            arrow.color = arrowColor;
             _light.intensity = 0;
             chargeTime = 0f;
         }

@@ -33,6 +33,7 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
+
         m_Grounded = false;
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
@@ -43,6 +44,10 @@ public class PlayerControl : MonoBehaviour
             {
                 m_Grounded = true;
             }
+        }
+        if (skillCD[0] >= 0f)
+        {
+            skillCD[0] -= Time.deltaTime;
         }
         m_Animator.SetBool("onAir", !m_Grounded);
     }
@@ -96,11 +101,15 @@ public class PlayerControl : MonoBehaviour
         if (target != null) isSame = (target.Electrode == selfElectrode);
         else return;
 
-        m_Animator.SetBool("onCharge", true);
-        TetrisAction.audioPlayer.PlayOneShot(ablityAudio);
-        TetrisAction tetrisAction = obj.GetComponent<TetrisAction>();
-        tetrisAction.firstTouch = tetrisAction.firstTouch==null ? who : tetrisAction.firstTouch;
-        target.Attract(transform, skillForce * MathF.Min(powerMul,3), isSame, ForceMode2D.Impulse);
+        if (skillCD[0] <= 0)
+        {
+            m_Animator.SetBool("onCharge", true);
+            TetrisAction.audioPlayer.PlayOneShot(ablityAudio);
+            TetrisAction tetrisAction = obj.GetComponent<TetrisAction>();
+            tetrisAction.firstTouch = tetrisAction.firstTouch==null ? who : tetrisAction.firstTouch;
+            target.Attract(transform, skillForce * MathF.Min(powerMul,3), isSame, ForceMode2D.Impulse);
+            skillCD[0] = 0.5f;
+        }
 
     }
     public void OnAblityAnimationEnd()

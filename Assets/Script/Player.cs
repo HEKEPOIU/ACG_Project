@@ -17,7 +17,7 @@ public class Player : MonoBehaviour,IAttractAble
     [SerializeField] SpriteRenderer arrow;
     Light2D _light;
 
-    [Header("¿ï¾ÜAttractable¹Ï¼h")]
+    [Header("é¸æ“‡Attractableåœ–å±¤")]
     [SerializeField] LayerMask layerMask;
     float chargeTime = 0f;
 
